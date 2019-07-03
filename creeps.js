@@ -83,10 +83,10 @@ var creeps = {
                     }
                     var remainder_energy = energy-count*100
                     if (remainder_energy >= 50) {
-                        body.push(MOVE)
+                        body.push(CARRY)
                     }
                 }else{
-                    body.push(MOVE)
+                    body.push(CARRY)
                 }
                 break;
         }

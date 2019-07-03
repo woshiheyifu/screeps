@@ -2,8 +2,8 @@ global.cfg = require('config')
 var roleHarvester   = require('role.harvester');
 var roleUpgrader    = require('role.upgrader');
 var roleBuilder     = require('role.builder');
-var spawn           = require('spawn');
-var structure       = require('structure');
+var spawnObj        = require('spawn');
+var structureObj    = require('structure');
 var creeps          = require('creeps')
 
 module.exports.loop = function () {
@@ -16,8 +16,9 @@ module.exports.loop = function () {
         }
     }
     //查找路线，并建造道路
-    if (structure.getConstructionCount(STRUCTURE_ROAD) < cfg.construction_sites_total){
-        // spawn.findPath()
+    if (structureObj.getConstructionCount(STRUCTURE_ROAD) < cfg.construction_sites_total){
+        // spawnObj.findPath()
+        // spawnObj.findPathToController()
     }
     //检查各种类蠕虫数量，并生成
     creeps.createCreeps()

@@ -5,10 +5,10 @@ var config = {
     builder_max:3,
     harvester_min:3,
     harvester_max:5,
-    upgrader_min:2,
+    upgrader_min:3,
     upgrader_max:3,
     construction_sites_total:100,//系统默认值，不能修改
-    creeps_total:10
+    creeps_total:8
 }
 
 module.exports = config;

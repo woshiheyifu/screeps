@@ -1,4 +1,5 @@
 var spawn = {
+    spawn: Game.spawns[cfg.spawnName],
     findPath:function () {
         //控制器
         var controller = Game.spawns['Spawn1'].room.controller
@@ -6,7 +7,7 @@ var spawn = {
         var sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);
         var spawn = Game.spawns['Spawn1']
 
-        var path_to_controller = Game.spawns['Spawn1'].room.findPath(spawn.pos,controller.pos)
+        var path_to_controller = Game.spawns['Spawn1'].room.findPath(spawn.pos,controller.pos,{ ignoreCreeps: true })
         for (var a in sources) {
             //计算能量源周围24个点
             var x_s = sources[a].pos.x - 2,
@@ -35,6 +36,20 @@ var spawn = {
             if (res_road.length == 0 && res_site.length == 0 && path_to_controller[i].x != controller.pos.x && path_to_controller[i].y != controller.pos.y) {
                 console.log('build road to controller')
                 Game.spawns['Spawn1'].room.createConstructionSite(path_to_controller[i].x,path_to_controller[i].y,STRUCTURE_ROAD)
+            }
+        }
+    },
+    buildRoadToController:function(){
+        //控制器
+        var controller = Game.spawns[cfg.spawnName].room.controller
+        var path_to_controller = Game.spawns[cfg.spawnName].room.findPath(this.spawn.pos,controller.pos,{ ignoreCreeps: true })
+        for (var i in path_to_controller) {
+            //查找已建和待建
+            var res_road = Game.spawns['Spawn1'].room.lookForAt(LOOK_STRUCTURES,path_to_controller[i].x,path_to_controller[i].y)
+            var res_site = Game.spawns['Spawn1'].room.lookForAt(LOOK_CONSTRUCTION_SITES,path_to_controller[i].x,path_to_controller[i].y)
+            if (res_road.length == 0 && res_site.length == 0 && path_to_controller[i].x != controller.pos.x && path_to_controller[i].y != controller.pos.y) {
+                console.log('build road to controller')
+                this.buildStructure(path_to_controller[i].x,path_to_controller[i].y,STRUCTURE_ROAD)
             }
         }
     },

@@ -24,7 +24,7 @@ var sourceObj = {
                 for (var i in sources) {
                     var creeps = _.filter(Game.creeps,(creep) => creep.memory._move)
                     creeps = _.filter(creeps,(creep) => creep.memory._move.dest.x == sources[i].pos.x && creep.memory._move.dest.y == sources[i].pos.y)
-                    if (creeps.length < 5) {
+                    if (creeps.length < 3) {
                         source = sources[i]
                         break
                     }
