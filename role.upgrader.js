@@ -5,12 +5,12 @@ var roleUpgrader = {
     /** @param {Creep} creep **/
     run: function(creep) {
 
-        if(creep.room.controller) {
-            if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                // creep.moveTo(creep.room.controller)
-                spawnObj.buildRoadByPath(creep,creep.room.controller)
-            }
-        }
+        // if(creep.room.controller) {
+        //     if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+        //         // creep.moveTo(creep.room.controller)
+        //         spawnObj.buildRoadByPath(creep,creep.room.controller)
+        //     }
+        // }
 
         if(creep.memory.upgrading && creep.carry.energy == 0) {
             creep.memory.upgrading = false;
@@ -31,6 +31,7 @@ var roleUpgrader = {
             if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 // creep.moveTo(source);
                 spawnObj.buildRoadByPath(creep,source)
+                creep.memory.sourceId = source.id
             }
         }
 	}

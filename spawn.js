@@ -8,7 +8,7 @@ var spawn = {
             this.buildRoadToController()
             this.buildRoadToAllSources()
         }
-        this.renewCreep()
+        // this.renewCreep()
     },
     renewCreep : function () {
         var creepsObj = require('creeps'),
@@ -101,6 +101,7 @@ var spawn = {
             extensions_energy += extensions[i].energy
         }
         var energy = extensions_energy + this.spawn.energy
+        console.log('当前能量：',energy)
 
         return energy
     },

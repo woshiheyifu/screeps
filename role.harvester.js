@@ -20,9 +20,11 @@ var roleHarvester = {
                 if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
                     // creep.moveTo(source)
                     spawnObj.buildRoadByPath(creep,source)
+                    creep.memory.sourceId = source.id
                 }
             }
         } else {
+	        creep.memory.sourceId = ''
             var targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (structure.structureType == STRUCTURE_EXTENSION ||
