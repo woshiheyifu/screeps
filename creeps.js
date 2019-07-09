@@ -32,6 +32,31 @@ var creeps = {
             cost:10
         },
     },
+    init : function(){
+        this.clearDeathCreeps()
+        this.createCreeps()
+        this.consoleCreepsCount()
+        for(var name in Game.creeps) {
+            var creep = Game.creeps[name]
+            this.run(creep)
+        }
+    },
+    run : function(creep){
+        var creepRole = require('role.'+this.getCreepRole(creep));
+        creepRole.run(creep)
+    },
+    //清理已死的creep
+    clearDeathCreeps : function () {
+        for(var name in Memory.creeps) {
+            if(!Game.creeps[name]) {
+                delete Memory.creeps[name];
+                console.log('Clearing non-existing creep memory:', name);
+            }
+        }
+    },
+    getCreepRole : function(creep){
+        return creep.memory.role
+    },
     getHarvesters : function(){
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester')
         return harvesters
@@ -50,18 +75,19 @@ var creeps = {
     },
     createCreeps : function () {
         if (creeps.getAllCreeps().length < cfg.creeps_total) {
-            var energy = spawn.getEnergy()
-            if (energy >= 200) {
-                //默认都生成harvester，后根据需要来变换角色
-                console.log('energy:',energy)
-                var body = creeps.generateBody(energy)
-                var newName = 'Creeps' + Game.time;
-                console.log('body:',body)
+            //暂时生成相同的creep
+            var newName = 'Creeps' + Game.time;
+            if (spawn.checkSpawnEnergyFull()) {
                 console.log('Spawning new harvester: ' + newName);
-                Game.spawns[cfg.spawnName].spawnCreep(body, newName,
-                    {memory: {role: 'harvester',body:body}});
+                Game.spawns[cfg.spawnName].spawnCreep(cfg.harvester_body, newName,
+                    {memory: {role: 'harvester',body:cfg.harvester_body}});
             }
         }
+    },
+    consoleCreepsCount : function(){
+        console.log('harvester:',this.getHarvesters().length)
+        console.log('upgrader:',this.getUpgraders().length)
+        console.log('builder:',this.getBuilders().length)
     },
     generateBody : function (energy) {
         //查看当前能量,目前最大能量550 @todo 以后优化算法

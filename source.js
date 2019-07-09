@@ -8,23 +8,29 @@ var sourceObj = {
         return points
     },
     getAwaitHarvestSource : function (creep) {
-        var sources = Game.rooms[cfg.roomName].find(FIND_SOURCES)
+        var sources = this.getAllSources()
         var source
-        if (creep.memory._move) {
-            var creep_move_to = [creep.memory._move.dest.x,creep.memory._move.dest.y],
+        if (creep.memory.targetPoint) {
+            var paths = creep.memory.path,
                 sources_points = sourceObj.getSourcesPoints()
-            //对比坐标是否在集合中
-            var res = sources_points.some((e,i)=>{
-                if (JSON.stringify(e) == JSON.stringify(creep_move_to)) {
-                    source = sources[i]
+            for (var a in sources_points) {
+                //对比坐标是否在集合中
+                var res = paths.some((e,i)=>{
+                    if (e.x == sources_points[a][0] && e.y == sources_points[a][1]) {
+                        source = sources[a]
+                    }
+                    return e.x == sources_points[a][0] && e.y == sources_points[a][1]
+                })
+                if (res) {
+                    break;
                 }
-                return JSON.stringify(e) == JSON.stringify(creep_move_to)
-            })
+            }
+
             if (!res){
                 for (var i in sources) {
-                    var creeps = _.filter(Game.creeps,(creep) => creep.memory._move)
-                    creeps = _.filter(creeps,(creep) => creep.memory._move.dest.x == sources[i].pos.x && creep.memory._move.dest.y == sources[i].pos.y)
-                    if (creeps.length < 3) {
+                    var creeps = _.filter(Game.creeps,(creep) => creep.memory.targetPoint && creep.memory.path)
+                    creeps = _.filter(creeps,(creep) => creep.memory.targetPoint.x == sources[i].pos.x && creep.memory.targetPoint.y == sources[i].pos.y)
+                    if (creeps.length < 4) {
                         source = sources[i]
                         break
                     }
@@ -40,7 +46,11 @@ var sourceObj = {
         return source
     },
     getAllSources : function () {
-        return Game.rooms[cfg.roomName].find(FIND_SOURCES)
+        return Game.rooms[cfg.roomName].find(FIND_SOURCES,{
+            filter : (source) => {
+                return source.energy > 0
+            }
+        })
     }
 }
 

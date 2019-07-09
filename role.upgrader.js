@@ -1,4 +1,5 @@
 var sourceObj = require('source')
+var spawnObj = require('spawn')
 var roleUpgrader = {
 
     /** @param {Creep} creep **/
@@ -6,7 +7,8 @@ var roleUpgrader = {
 
         if(creep.room.controller) {
             if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller);
+                // creep.moveTo(creep.room.controller)
+                spawnObj.buildRoadByPath(creep,creep.room.controller)
             }
         }
 
@@ -21,12 +23,14 @@ var roleUpgrader = {
 
 	    if(creep.memory.upgrading) {
             if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller);
+                // creep.moveTo(creep.room.controller);
+                spawnObj.buildRoadByPath(creep,creep.room.controller)
             }
         }else {
             var source = sourceObj.getAwaitHarvestSource(creep)
             if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source);
+                // creep.moveTo(source);
+                spawnObj.buildRoadByPath(creep,source)
             }
         }
 	}
