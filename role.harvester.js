@@ -8,19 +8,21 @@ var roleHarvester = {
 	    if(creep.carry.energy < creep.carryCapacity) {
 	        //先判断有没有tombstone
             var tombstone = creep.room.find(FIND_TOMBSTONES)
-            if (tombstone.length > 0) {
+            if (false) {
                 console.log('有tombstone：',tombstone[0])
                 if (creep.withdraw(tombstone[0],RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(tombstone[0])
+                    creep.memory.sourceId = tombstone[0].id
                 }
-            }
-	        //首先判断creep是否正在移动去采集
-            var source = sourceObj.getAwaitHarvestSource(creep)
-            if (source) {
-                if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                    // creep.moveTo(source)
-                    spawnObj.buildRoadByPath(creep,source)
-                    creep.memory.sourceId = source.id
+            }else{
+                //首先判断creep是否正在移动去采集
+                var source = sourceObj.getAwaitHarvestSource(creep)
+                if (source) {
+                    if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                        // creep.moveTo(source)
+                        spawnObj.buildRoadByPath(creep,source)
+                        creep.memory.sourceId = source.id
+                    }
                 }
             }
         } else {
@@ -35,7 +37,13 @@ var roleHarvester = {
             var towers = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return structure.structureType == STRUCTURE_TOWER &&
-                        structure.energy < structure.energyCapacity;
+                        structure.energy == 0;
+                }
+            });
+            var storage = creep.room.find(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return structure.structureType == STRUCTURE_STORAGE &&
+                        structure.store[RESOURCE_ENERGY] < structure.storeCapacity;
                 }
             });
             if(targets.length > 0) {
@@ -47,6 +55,11 @@ var roleHarvester = {
                 if(creep.transfer(towers[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     // creep.moveTo(targets[0])
                     spawnObj.buildRoadByPath(creep,towers[0])
+                }
+            }else if (storage.length > 0){
+                if(creep.transfer(storage[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    // creep.moveTo(targets[0])
+                    spawnObj.buildRoadByPath(creep,storage[0])
                 }
             }else{
                 //先保证upgrader数量足够

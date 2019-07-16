@@ -10,8 +10,11 @@ var sourceObj = {
     getAwaitHarvestSource : function (creep) {
         var sources = this.getAllSources()
         var source
-        if (creep.memory.sourceId != '') {
-            source = Game.getObjectById(creep.memory.sourceId)
+        if (creep.memory.sourceId != '' && creep.memory.sourceId) {
+            var old_source = Game.getObjectById(creep.memory.sourceId)
+            if (old_source.energy > 0 && old_source.energy){
+                source = Game.getObjectById(creep.memory.sourceId)
+            }
         }else {
             // if (creep.memory.targetPoint) {
             //     var paths = creep.memory.path,
@@ -28,12 +31,10 @@ var sourceObj = {
             //             break;
             //         }
             //     }
-
-
                 for (var i in sources) {
-                    var creeps = _.filter(Game.creeps,(creep) => creep.memory.sourceId != '')
+                    var creeps = _.filter(Game.creeps,(creep) => creep.memory.sourceId != '' && creep.memory.targetPoint)
                     creeps = _.filter(creeps,(creep) => creep.memory.targetPoint.x == sources[i].pos.x && creep.memory.targetPoint.y == sources[i].pos.y)
-                    if (creeps.length < 4) {
+                    if (creeps.length < 3) {
                         source = sources[i]
                         break
                     }

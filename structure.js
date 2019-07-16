@@ -1,8 +1,9 @@
 var structure = {
     room : Game.rooms[cfg.roomName],
     init : function () {
-        this.repairRoad()
         this.attackHostileCreep()
+        this.repairRoad()
+        // this.repairWall()
     },
     getType:function () {
         
@@ -34,10 +35,25 @@ var structure = {
             }
         }
     },
+    repairWall : function () {
+        var walls = this.getStructureTarget(FIND_STRUCTURES,STRUCTURE_WALL),
+            towers = this.getStructureTarget(FIND_MY_STRUCTURES,STRUCTURE_TOWER)
+        for (var i in towers) {
+            if (towers[i].energy > 0) {
+                //修路
+                for (var a in walls) {
+                    if (walls[a].hits < walls[a].hitsMax){
+                        towers[i].repair(walls[a])
+                    }
+                }
+            }
+        }
+    },
     attackHostileCreep : function () {
         var hostile_creeps = this.room.find(FIND_HOSTILE_CREEPS),
             towers = this.getStructureTarget(FIND_MY_STRUCTURES,STRUCTURE_TOWER)
         if (hostile_creeps.length > 0) {
+            console.log('有敌人：',hostile_creeps[0].id)
             for (var i in towers) {
                 if (towers[i].energy > 0) {
                     //攻击他

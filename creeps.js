@@ -76,13 +76,26 @@ var creeps = {
     createCreeps : function () {
         if (creeps.getAllCreeps().length < cfg.creeps_total) {
             //暂时生成相同的creep
-            var newName = 'Creeps' + Game.time;
-            if (spawn.checkSpawnEnergyFull()) {
+            var newName
+            console.log(cfg.harvester_body)
+            if (this.getHarvesters().length < cfg.harvester_min) {       //生成harvester
+                newName = 'Harvester' + Game.time;
                 console.log('Spawning new harvester: ' + newName);
+                console.log(Game.spawns[cfg.spawnName].spawnCreep(cfg.harvester_body, newName,
+                    {memory: {role: 'harvester', body: cfg.harvester_body}}))
+
+            }else if (this.getUpgraders().length < cfg.upgrader_min) {            //生成upgrader
+                newName = 'Upgrader' + Game.time;
+                console.log('Spawning new upgrader: ' + newName);
                 Game.spawns[cfg.spawnName].spawnCreep(cfg.harvester_body, newName,
-                    {memory: {role: 'harvester',body:cfg.harvester_body}});
+                    {memory: {role: 'upgrader', body: cfg.harvester_body}});
+            } else if (this.getBuilders().length < cfg.builder_min)         //生成builder
+                newName = 'Builder' + Game.time;
+                console.log('Spawning new builder: ' + newName);
+                Game.spawns[cfg.spawnName].spawnCreep(cfg.harvester_body, newName,
+                    {memory: {role: 'builder', body: cfg.harvester_body}});
             }
-        }
+
     },
     consoleCreepsCount : function(){
         console.log('harvester:',this.getHarvesters().length)

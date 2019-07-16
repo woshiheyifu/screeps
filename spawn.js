@@ -1,3 +1,4 @@
+var structureObj = require('structure')
 var spawn = {
     spawn: Game.spawns[cfg.spawnName],
     init : function () {
@@ -94,13 +95,13 @@ var spawn = {
     },
     //包括本身和扩展中的
     getEnergy:function () {
-        var structureObj = require('structure'),
-            extensions = structureObj.getStructureTarget(FIND_STRUCTURES,STRUCTURE_EXTENSION),
+        var extensions = structureObj.getStructureTarget(FIND_STRUCTURES,STRUCTURE_EXTENSION),
             extensions_energy = 0
         for (var i in extensions) {
             extensions_energy += extensions[i].energy
         }
         var energy = extensions_energy + this.spawn.energy
+        console.log('spawnenergy:',this.spawn.energy)
         console.log('当前能量：',energy)
 
         return energy
@@ -111,8 +112,9 @@ var spawn = {
     //判断spawn能量是否满，包括扩展中的
     checkSpawnEnergyFull : function () {
         var structureObj = require('structure'),
-            extensions = structureObj.getStructureTarget(FIND_STRUCTURES,STRUCTURE_EXTENSION)
-        if (this.getEnergy() == this.spawn.energyCapacity + extensions.length*cfg.extension_energy_capacity){
+            extensions = structureObj.getStructureTarget(FIND_STRUCTURES,STRUCTURE_EXTENSION),
+            full_energy = this.spawn.energyCapacity + extensions.length*cfg.extension_energy_capacity;
+        if (this.getEnergy() == full_energy){
             return true
         }else {
             return false
@@ -124,6 +126,7 @@ var spawn = {
         creep.moveByPath(paths);
         creep.memory.path = paths
         creep.memory.targetPoint = target.pos
+        paths.pop()
         for (var i in paths) {
             if (this.checkExistenceSite(paths[i].x, paths[i].y)) {
                 this.buildStructure(paths[i].x,paths[i].y,STRUCTURE_ROAD)

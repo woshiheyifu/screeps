@@ -34,7 +34,8 @@ var roleBuilder = {
 				var important_targets = creep.room.find(FIND_CONSTRUCTION_SITES,{
 					filter: (structure) => {
 						return structure.structureType == STRUCTURE_TOWER ||
-						structure.structureType == STRUCTURE_EXTENSION
+						structure.structureType == STRUCTURE_EXTENSION ||
+							structure.structureType == STRUCTURE_STORAGE
 					}
 				});
 				var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
